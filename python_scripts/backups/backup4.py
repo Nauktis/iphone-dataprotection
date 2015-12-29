@@ -3,6 +3,8 @@ from hashlib import sha1
 from struct import unpack
 import os
 import re
+import logging
+import sys
 
 MBDB_SIGNATURE = 'mbdb\x05\x00'
 
@@ -138,7 +140,10 @@ class MBDB(object):
         output_path = os.path.join(output_path, record.domain, out_file)
 
         # Create the directory if necessary
-        os.makedirs(os.path.dirname(output_path))
+        try:
+            os.makedirs(os.path.dirname(output_path))
+        except(OSError):
+            logging.info("Directory %s already exist" % (output_path))
 
         print("Writing %s" % output_path)
         f2 = file(output_path, 'wb')
